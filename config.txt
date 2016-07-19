@@ -1,0 +1,27 @@
+[Sampler]
+rmin: 40
+rmax: 60
+nr: 5
+nmu: 10
+ncores: 2
+
+[Output]
+fileprefix: /Users/rcoconne/Documents/LSS/Covariance Matrix/Samples/Test_
+
+[Survey]
+surveylib: QPM_Like_Survey
+Omega_m: 0.29
+h: 0.7
+zmin: 0.43
+zmax: 0.7
+RAmin: 109
+RAmax: 264
+decmin: -4
+decmax: 69
+nzw_file: QPMd.nzw
+mask_file: mask-cmass-dr12v4-N-Reid.ply
+
+[Corr]
+corrlib: Grid_xi
+xifile: QPM_D_ngc_rsd_fix3.xi
+
