@@ -22,9 +22,11 @@ to the covariance matrix, as well as many other parameters describing that run o
 My hope is that putting all of this information in a single file will be convenient. To generate a 
 Gaussian covariance matrix from a .pkl file, do something like this:
 
-~~~~import pickle
-~~~~rascal\_run = pickle.load(open('Rascal\_Output.pkl'))
-~~~~gaussian\_covariance = rascal\_run['c2'] + rascal\_run['c3'] + rascal\_run['c4']
+```
+import pickle
+rascal\_run = pickle.load(open('Rascal\_Output.pkl'))
+gaussian\_covariance = rascal\_run['c2'] + rascal\_run['c3'] + rascal\_run['c4']
+```
 
 The `Survey` and `Corr` sections describe the survey geometry and correlation function, 
 respectively. These sections always specify `surveylib` and `corrlib`, the python libraries
