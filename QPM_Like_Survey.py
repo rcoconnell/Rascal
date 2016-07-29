@@ -1,3 +1,7 @@
+"""
+Also needs some docstrings!
+"""
+
 from RASCAL_Sampler import *
 import mangle
 from scipy.integrate import quad
@@ -17,8 +21,8 @@ def init(opts):
 	ramax  = float(opts['ramax'])
 	decmin = float(opts['decmin']) +90.
 	decmax = float(opts['decmax']) +90.
-#	zmin   = float(opts['zmin'])
-#	zmax   = float(opts['zmax'])
+	zmin   = float(opts['zmin'])
+	zmax   = float(opts['zmax'])
 
 	nzw_file  = opts['nzw_file']	#Currently it's assumed that this n(z) is defined from 0.43-0.7
 	mask_file = opts['mask_file']
@@ -51,10 +55,10 @@ def init(opts):
 
 	nVol = sum(mask.weights * mask.areas) * trapz(d(zcen[f])**2 * nbar[f] , d(zcen[f]))
 
-	n1inv,n1pdf = pinv_pair(nbar[f]    * d(zcen[f])**2,d(zbdy[g]))
-	n2inv,n2pdf = pinv_pair(nbar[f]**2 * d(zcen[f])**2 * wvec[f]**2,d(zbdy[g]))
-	n3inv,n3pdf = pinv_pair(nbar[f]**3 * d(zcen[f])**2,d(zbdy[g]))
-	n4inv,n4pdf = pinv_pair(nbar[f]**4 * d(zcen[f])**2,d(zbdy[g]))
+# 	n1inv,n1pdf = pinv_pair(nbar[f]    * d(zcen[f])**2,d(zbdy[g]))
+# 	n2inv,n2pdf = pinv_pair(nbar[f]**2 * d(zcen[f])**2 * wvec[f]**2,d(zbdy[g]))
+# 	n3inv,n3pdf = pinv_pair(nbar[f]**3 * d(zcen[f])**2,d(zbdy[g]))
+# 	n4inv,n4pdf = pinv_pair(nbar[f]**4 * d(zcen[f])**2,d(zbdy[g]))
 
 	nb_lohi = zeros(2)
 	nb_lohi[0] = nbar[0] + ( (nbar[1]-nbar[0])/(zcen[1]-zcen[0]) )*(0.43-zcen[0])
@@ -77,20 +81,20 @@ def init(opts):
 	nbar_r = interp1d(d(zfid),nfid,bounds_error=False,fill_value=0)
 	weight_r = interp1d(d(zfid),wfid,bounds_error=False,fill_value=0)
 
-	def nwr_fn(r_vec):
-		r = anorm(r_vec)
-		x,y,z = transpose(r_vec)
-		dec = arccos(x/r)*(180/pi) - 90
-		ra  = arctan2(z,y) * (180/pi)
-		f = where(ra<0)
-		ra[f] += 360
-		mask_w = mask.get_weights(ra,dec)
-		if maskcut != 1:
-			f = where(w>maskcut)
-			w[f] = 1.
-		n = nbar_r(r)
-		w = weight_r(r)
-		return n*w*mask_w*r
+# 	def nwr_fn(r_vec):
+# 		r = anorm(r_vec)
+# 		x,y,z = transpose(r_vec)
+# 		dec = arccos(x/r)*(180/pi) - 90
+# 		ra  = arctan2(z,y) * (180/pi)
+# 		f = where(ra<0)
+# 		ra[f] += 360
+# 		mask_w = mask.get_weights(ra,dec)
+# 		if maskcut != 1:
+# 			f = where(w>maskcut)
+# 			w[f] = 1.
+# 		n = nbar_r(r)
+# 		w = weight_r(r)
+# 		return n*w*mask_w*r
 
 	def nw_fn(r_vec):
 		r = anorm(r_vec)
@@ -112,4 +116,4 @@ def init(opts):
 		w = weight_r(r)
 		return w
 	
-	return nwr_fn,nw_fn,w_fn,d
+	return nw_fn,w_fn,d

@@ -1,3 +1,7 @@
+"""
+This defines the 'Survey' class for Rascal.
+"""
+
 from RASCAL_Sampler import anorm,aortho,pinv_pair
 from numpy import array,transpose,linspace,sqrt,cos,sin,pi,concatenate
 from numpy.random import rand
@@ -5,11 +9,18 @@ from numpy.random import rand
 #Status: init runs, need to test that r_vecdraw matches original, then see if maskpair matches as well
 
 class Survey(object):
+	"""
+	Instances of this class describe the geometrical properties of a survey, and the dynamical properties
+	of the objects studied in the survey. Options, including the options that specify which libraries
+	will provide the correlation function and geometry, are passed through from Rascal.
+
+	Instances then provide a number of methods used by Rascal. At present, these are xi, r2xi, nw, and maskpair.
+	"""
 	def __init__(self,corr_opts,sgeo_opts):
 		corr = __import__(corr_opts['corrlib'])
 		sgeo = __import__(sgeo_opts['surveylib'])
 		self.xi,self.r2xi = corr.init(corr_opts) #In the long term, r2xi should be computed in this class
-		self.nwr,self.nw,self.wr,self.dz  = sgeo.init(sgeo_opts)
+		self.nw,self.w,self.dz  = sgeo.init(sgeo_opts)
 		self.zmin   = float(sgeo_opts['zmin'])
 		self.zmax   = float(sgeo_opts['zmax'])
 		self.RAmin  = float(sgeo_opts['ramin'])
@@ -26,12 +37,18 @@ class Survey(object):
 		dbdy = self.dz(zbdy)
 		r_vec = array([ dcen*los_cth, dcen*sqrt(1-los_cth**2)*cos(los_RA*pi/180), dcen*sqrt(1-los_cth**2)*sin(los_RA*pi/180) ])
 		r_vec = transpose(r_vec)
-		nwcen = self.nwr(r_vec)
+		nwcen = self.nw(r_vec)
 		self.n2inv,self.n2pdf = pinv_pair( nwcen**2 * dcen**2 , dbdy )
 
 		#later on, set up r2xi here instead of loading it from corr
 	
 	def r_vecdraw(self,r):
+		"""
+		r_vecdraw takes in an array of reals (line-of-sight distances to points in the survey)
+		and converts them into 3-component vectors with angular coordinates inside the bounding box
+		described by RAmin, RAmax, decmin, and decmax. It returns the 3-component vectors as well as
+		the probability density associated with those angular coordinates.
+		"""
 		ni = len(r)
 		phi_draw = self.RAmin + (self.RAmax-self.RAmin)*rand(ni)
 		cth_draw = cos(self.decmin*pi/180) + ( cos(self.decmax*pi/180) - cos(self.decmin*pi/180) ) * rand(ni)
@@ -40,6 +57,13 @@ class Survey(object):
 		return r_vec,1/( (self.RAmax-self.RAmin)*(pi/180) * ( cos(self.decmin*pi/180) - cos(self.decmax*pi/180) ) )
 	
 	def maskpair(self,rij):
+		"""
+		maskpair takes in an array of vectors r_ij and produces pairs of vectors within the survey volume,
+		r_i and r_j, whose difference is r_ij. It returns several quantities. First r^2 * r_ij^2 * n^2 * w^2, where
+		n^2 and w^2 are the number density and weights evaluated at r_i and r_j, then the probability of choosing 
+		each pair of vectors r_i and r_j, the vectors r_i and r_j themselves, and the weight function evaluated at
+		r_i and r_j.
+		"""
 		rij_mag = anorm(rij)
 		ns = len(rij_mag)
 		los_mag = self.n2inv(rand(ns))
@@ -56,11 +80,11 @@ class Survey(object):
 		ri_mag = anorm(ri)
 		rj_mag = anorm(rj)
 		
-		nwij = self.nwr(concatenate((ri,rj)))
+		nwij = self.nw(concatenate((ri,rj)))
 		nwi  = nwij[:ns]
 		nwj  = nwij[ns:2*ns]
 		
-		wij = self.wr(concatenate((ri,rj)))
+		wij = self.w(concatenate((ri,rj)))
 		wi  = wij[:ns]
 		wj  = wij[ns:2*ns]
 

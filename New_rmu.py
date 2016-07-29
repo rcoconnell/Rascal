@@ -1,3 +1,8 @@
+"""
+This version of Rascal generates a covariance matrix for a 2-point correlation function
+evaluated in bins of (r,mu). It implements the method described in O'Connell et al, arxiv:1510.01740
+"""
+
 from ConfigParser import SafeConfigParser
 from multiprocessing import Pool
 from RASCAL_Sampler import *
@@ -9,7 +14,7 @@ from time import time
 import pickle
 from numpy.random import seed
 import sys
-import New_Survey as Survey_mod
+import New_Survey as Rascal_classes
 
 if len(sys.argv)!=2:
 	print "Config file?"
@@ -21,7 +26,7 @@ Config.read(sys.argv[1])
 #Setting up the survey geometry and correlation function
 survey_opts = dict(Config.items('Survey'))
 corr_opts = dict(Config.items('Corr'))
-mysurvey = Survey_mod.Survey(corr_opts,survey_opts)
+mysurvey = Rascal_classes.Survey(corr_opts,survey_opts)
 
 #Setting up the sampler
 rmin  = Config.getfloat('Sampler','rmin')
@@ -43,7 +48,7 @@ print "Mask is bounded in dec by "+str(mysurvey.decmin)+"-"+str(mysurvey.decmax)
 #######
 
 #Some flags
-RASCAL_version = '0.9'
+RASCAL_version = '0.95'
 
 #More sampler options
 ncores  = Config.getint('Sampler','ncores')
@@ -60,13 +65,21 @@ dmu = mumins[1] - mumins[0]
 dr  = rmins[1]  - rmins[0]
 for ri in range(len(rmins)):
 	for mui in range(len(mumins)):
-		bnl.append( bins(rmins[ri],rmins[ri],mumins[mui],mumins[mui],dr,dmu) )
+		bnl.append( bin(rmins[ri],mumins[mui],dr,dmu) )
 
 ######
 
 def dosamples(bn):
+	"""
+	dosamples takes in a bin and estimates the covariance matrix entry associated with that bin. 
+	It returns a dictionary with R_a, the correlation function, and the 2-, 3-, and 4-point 
+	contributions to the covariance matrix.
+	"""
 	from numpy.random import seed
 	seed()
+
+	r_center = bn['rmin'] + 0.5*bn['dr']
+	mu_center = bn['mumin'] + 0.5*bn['dmu']
 
 	Ra  = 0
 	ctx = 0
@@ -74,7 +87,7 @@ def dosamples(bn):
 	ct3 = zeros(nbins)
 	ct4 = zeros(nbins)
 
-	rij,p = flat_draw(NSamp,bn,1)
+	rij,p = flat_draw(NSamp,bn)
 	r4n2 , dp , ri_vec , rj_vec ,wi,wj= mysurvey.maskpair(rij)
 	p *= dp
 
@@ -145,6 +158,8 @@ def dosamples(bn):
 	outd['ct2'] = ct2
 	outd['ct3'] = ct3
 	outd['ct4'] = ct4
+	outd['r_center'] = r_center
+	outd['mu_center'] = mu_center
 	
 	return outd
 
@@ -168,6 +183,8 @@ for loopct in range(nloops):
 	ct2 = zeros(nbins)
 	ct3 = zeros((nbins,nbins))
 	ct4 = zeros((nbins,nbins))
+	r_center = zeros(nbins)
+	mu_center = zeros(nbins)
 
 	for i in range(nbins):
 		Ra[i]  = myout[i]['Ra']
@@ -175,6 +192,8 @@ for loopct in range(nloops):
 		ct2[i] = myout[i]['ct2']
 		ct3[i] = myout[i]['ct3']
 		ct4[i] = myout[i]['ct4']
+		r_center[i] = myout[i]['r_center']
+		mu_center[i] = myout[i]['mu_center']
 	
 	cx = ctx / Ra
 	c2 = diag(ct2) / outer(Ra,Ra)
@@ -189,11 +208,12 @@ for loopct in range(nloops):
 	c_out['c3'] = c3
 	c_out['c4'] = c4
 	c_out['cx'] = cx
+	c_out['r_center'] = r_center
+	c_out['mu_center'] = mu_center
 	
 	c_out['rmins']    = rmins
 	c_out['mumins']   = mumins
 	c_out['NSamp']    = NSamp
-	#c_out['xifile']   = mysurvey.xifile
 	c_out['NSamp']    = NSamp
 	c_out['repeats']  = repeats
 	c_out['RASCAL_version'] = RASCAL_version
@@ -219,20 +239,22 @@ c3 = 0.5*(ct3+transpose(ct3))/outer(Ra,Ra)
 c4 = 0.5*(ct4+transpose(ct4))/outer(Ra,Ra)
 
 c_out = {}
-c_out['descriptive_keys'] = ['descriptive_keys','rmins','mumins','NSamp','repeats','RASCAL_version']
+c_out['descriptive_keys'] = ['descriptive_keys','NSamp','repeats','RASCAL_version','corr_opts','survey_opts']
 
 c_out['Ra'] = Ra	
 c_out['c2'] = c2
 c_out['c3'] = c3
 c_out['c4'] = c4
 c_out['cx'] = cx
+c_out['r_center'] = r_center
+c_out['mu_center'] = mu_center
 
 c_out['rmins']    = rmins
 c_out['mumins']   = mumins
 c_out['NSamp']    = NSamp
-#c_out['xifile']   = mysurvey.xifile
-c_out['NSamp']    = NSamp
 c_out['repeats']  = repeats
 c_out['RASCAL_version'] = RASCAL_version
+c_out['corr_opts'] = corr_opts
+c_out['survey_opts'] = survey_opts
 
 pickle.dump( c_out, open( fileprefix+'_'+'mean'+'.pkl', "wb" ),pickle.HIGHEST_PROTOCOL)
