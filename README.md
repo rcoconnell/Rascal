@@ -24,8 +24,8 @@ Gaussian covariance matrix from a .pkl file, do something like this:
 
 ```
 import pickle
-rascal\_run = pickle.load(open('Rascal\_Output.pkl'))
-gaussian\_covariance = rascal\_run['c2'] + rascal\_run['c3'] + rascal\_run['c4']
+rascal_run = pickle.load(open('Rascal_Output.pkl'))
+gaussian_covariance = rascal_run['c2'] + rascal_run['c3'] + rascal_run['c4']
 ```
 
 The `Survey` and `Corr` sections describe the survey geometry and correlation function, 
