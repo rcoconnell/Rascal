@@ -5,7 +5,7 @@ evaluated in bins of (r,mu). It implements the method described in O'Connell et 
 
 from ConfigParser import SafeConfigParser
 from multiprocessing import Pool
-from RASCAL_Sampler import *
+from Rascal_Sampler import *
 from numpy import loadtxt,savetxt,max,min,interp,abs,linspace,meshgrid,zeros,ones,cumsum,where,reshape,shape,array,mean,arange,std,trace,log,diag,outer
 from numpy.linalg import det,inv,eigvals
 from scipy.interpolate import RectBivariateSpline,interp1d
@@ -13,8 +13,8 @@ from scipy.optimize import fmin
 from time import time
 import pickle
 from numpy.random import seed
+import Rascal_Classes as Rascal_classes
 import sys
-import New_Survey as Rascal_classes
 
 if len(sys.argv)!=2:
 	print "Config file?"

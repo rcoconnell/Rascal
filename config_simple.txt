@@ -1,0 +1,27 @@
+[Sampler]
+rmin: 40
+rmax: 60
+nr: 5
+nmu: 10
+ncores: 2
+
+[Output]
+fileprefix: Test_Simple_
+
+[Survey]
+surveylib: Simple_Survey
+Omega_m: 0.29
+h: 0.7
+zmin: 0.43
+zmax: 0.7
+RAmin: 109
+RAmax: 264
+decmin: -4
+decmax: 69
+n_density: 0.00035
+
+[Corr]
+corrlib: Linear_xi
+xifile: SimpleMultipoles.csv
+b2sigma8: 0.8
+beta: 1.0

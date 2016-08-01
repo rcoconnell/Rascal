@@ -6,7 +6,7 @@ sets the mu-dependence).
 
 from scipy.interpolate import interp1d
 from numpy import concatenate, loadtxt
-from RASCAL_Sampler import *
+from Rascal_Sampler import *
 
 def L2(x):
 	"""
@@ -22,12 +22,12 @@ def L4(x):
 
 def init(opts):
 	# SimpleMultipoles was generated from a matter transfer function generated with CAMB.
-	# The power spectrum was found to have sigma8 = 0.8.
+	# The power spectrum use to generate SimpleMultipoles.csv was found to have sigma8 = 0.8.
 	xifile = "SimpleMultipoles.csv"
 	sigma8 = 0.8
 	
-	b2sigma8 = opts['b2sigma8']
-	beta = opts['beta']
+	b2sigma8 = float(opts['b2sigma8'])
+	beta = float(opts['beta'])
 	
 	rv,xi0,xi2,xi4 = loadtxt(xifile)
 	
@@ -56,4 +56,8 @@ def init(opts):
 	
 	# Need to generate r2xi as well
 	
-	return xi
+	rv_bdy = array(rv)
+	rv_bdy[1:] += 1
+	r2xi = pinv_pair( (xi0 * rv**2)[1:] , rv_bdy )
+	
+	return xi, r2xi

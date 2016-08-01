@@ -10,7 +10,7 @@ survey geometries. Note that it returns several functions that take in 3-compone
 function d(z).
 """
 
-from RASCAL_Sampler import *
+from Rascal_Sampler import *
 from scipy.integrate import quad
 from scipy.interpolate import interp1d
 from numpy import loadtxt,linspace,arccos,arctan2,mean,array,transpose,ones,cross

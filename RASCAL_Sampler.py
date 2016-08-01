@@ -1,5 +1,5 @@
 """
-The Sampler needs more docstrings, but I don't remember what each of these do.
+The Sampler needs more docstrings.
 """
 from numpy import max,min,array,where,reshape,shape,transpose,sqrt,sum,linspace,meshgrid,interp,trapz,abs,zeros,ones,pi,exp,cos,sin,sign,arange,concatenate,sort,cumsum,arctan2,cross,arctan2
 from numpy.random import rand,randint

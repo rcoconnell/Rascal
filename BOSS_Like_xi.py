@@ -1,4 +1,4 @@
-from RASCAL_Sampler import *
+from Rascal_Sampler import *
 from numpy import loadtxt,max,min,interp,abs,meshgrid,zeros,ones,where,reshape,shape,array,mean,arange
 from scipy.interpolate import RectBivariateSpline
 

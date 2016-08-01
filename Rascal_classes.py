@@ -2,7 +2,7 @@
 This defines the 'Survey' class for Rascal.
 """
 
-from RASCAL_Sampler import anorm,aortho,pinv_pair
+from Rascal_Sampler import anorm,aortho,pinv_pair
 from numpy import array,transpose,linspace,sqrt,cos,sin,pi,concatenate
 from numpy.random import rand
 

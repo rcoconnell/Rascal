@@ -6,10 +6,10 @@ nmu: 10
 ncores: 2
 
 [Output]
-fileprefix: /Users/rcoconne/Documents/LSS/Covariance Matrix/Samples/Test_
+fileprefix: Test_
 
 [Survey]
-surveylib: QPM_Like_Survey
+surveylib: BOSS_Like_Survey
 Omega_m: 0.29
 h: 0.7
 zmin: 0.43
@@ -18,10 +18,10 @@ RAmin: 109
 RAmax: 264
 decmin: -4
 decmax: 69
-nzw_file: QPMd.nzw
+nbar_file: nbar_DR12v5_CMASS_North_om0p31_Pfkp10000.dat
 mask_file: mask-cmass-dr12v4-N-Reid.ply
 
 [Corr]
-corrlib: Grid_xi
+corrlib: BOSS_Like_xi
 xifile: QPM_D_ngc_rsd_fix3.xi
 
