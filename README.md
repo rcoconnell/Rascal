@@ -1,5 +1,4 @@
-# Rascal
-Rapid sampler for large covariance matrices
+# Rascal: A rapid sampler for large covariance matrices
 
 This code is based on the method described in O'Connell et al. ([arxiv:1510.01740](https://arxiv.org/abs/1510.01740)). 
 If you use this code in a project, please cite that paper.
