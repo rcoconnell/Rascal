@@ -54,7 +54,7 @@ accommodate if you change the survey cosmology. The corresponding mask file is l
 *not* provided here. Instead, it can be downloaded from `http://data.sdss3.org/sas/dr12/boss/lss/mask_DR12v5_CMASS_North.ply`
 The method used to generate these files is described in Reid et al., ([arxiv:1509.06529](https://arxiv.org/abs/1509.06529)).
 
-The mask is handled by Molly Swanson's `manglepy`, also available ([on Github](https://github.com/mollyswanson/manglepy)).
+The mask is handled by Molly Swanson's `manglepy`, also available [on Github](https://github.com/mollyswanson/manglepy).
 `BOSS_Like_Survey.py` won't work unless it is installed.
 
 `BOSS_Like_xi.py` requires a correlation function evaluated on an *r*-*μ* grid. To approximate
