@@ -60,3 +60,5 @@ The mask is handled by Molly Swanson's `manglepy`, also available [on Github](ht
 `BOSS_Like_xi.py` requires a correlation function evaluated on an *r*-*μ* grid. To approximate
 the non-linear 2-point correlation function we use the average redshift-space correlation function 
 observed in 1,000 QPM mocks. The mocks are described in White et al., ([arxiv:1309.5532](http://arxiv.org/abs/1309.5532)).
+
+BARF
