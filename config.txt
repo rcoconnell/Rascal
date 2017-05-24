@@ -3,7 +3,7 @@ rmin: 40
 rmax: 60
 nr: 5
 nmu: 10
-ncores: 2
+ncores: 12
 
 [Output]
 fileprefix: Test_
@@ -20,6 +20,7 @@ decmin: -4
 decmax: 69
 nbar_file: nbar_DR12v5_CMASS_North_om0p31_Pfkp10000.dat
 mask_file: mask-cmass-dr12v4-N-Reid.ply
+p_fkp: 20000
 
 [Corr]
 corrlib: BOSS_Like_xi

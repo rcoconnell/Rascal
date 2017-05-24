@@ -33,9 +33,9 @@ def init(opts):
 		eff_area = 6.851419E+03
 	
 	try:
-		P_fkp = opts['P_fkp']
+		P_fkp = float(opts['p_fkp'])
 	except KeyError:
-		P_fkp = 10000
+		P_fkp = 0	#When no P_fkp is specified, use wfkp from the nbar file
 
 	# Loading the nbar file
 	zcen,zlo,zhi,nbar,wfkp,shell_vol,ngal = loadtxt(nbar_file,unpack=True,)
@@ -67,8 +67,12 @@ def init(opts):
 	my_rvals[1:-1] = d(zcen[f])
 	nbar_r = interp1d(my_rvals,nbar_all(my_rvals),bounds_error=False,fill_value=0)
 	
-	def weight_r(r):
-		return 1/(1+P_fkp * nbar_r(r))
+	if (P_fkp != 0):
+		def weight_r(r):
+			return 1/(1+P_fkp * nbar_r(r))
+	else:
+		wbar_all = interp1d(d(zcen),wfkp,bounds_error=False,fill_value=0)
+		weight_r = interp1d(my_rvals,wbar_all(my_rvals),bounds_error=False,fill_value=0)
 	
 	# Load the mask
 	mask = mangle.Mangle(mask_file)
