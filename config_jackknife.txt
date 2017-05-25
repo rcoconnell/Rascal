@@ -6,7 +6,7 @@ nmu: 10
 ncores: 12
 
 [Output]
-fileprefix: Test_20k_ncorr_
+fileprefix: Test_Jackknife_20k_ncorr_
 
 [Survey]
 surveylib: BOSS_Like_Survey

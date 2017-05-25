@@ -36,6 +36,11 @@ def init(opts):
 		P_fkp = float(opts['p_fkp'])
 	except KeyError:
 		P_fkp = 0	#When no P_fkp is specified, use wfkp from the nbar file
+		
+	try:
+		n_corr = float(opts['n_correction'])
+	except KeyError:
+		n_corr = 0
 
 	# Loading the nbar file
 	zcen,zlo,zhi,nbar,wfkp,shell_vol,ngal = loadtxt(nbar_file,unpack=True,)
@@ -73,6 +78,11 @@ def init(opts):
 	else:
 		wbar_all = interp1d(d(zcen),wfkp,bounds_error=False,fill_value=0)
 		weight_r = interp1d(my_rvals,wbar_all(my_rvals),bounds_error=False,fill_value=0)
+	
+	#I think we use the original nbar to compute the FKP weights, and only apply the correction later
+	if (n_corr != 0):
+		nbar_all = interp1d(d(zcen),n_corr * my_nbar,bounds_error=False,fill_value=0)
+		nbar_r = interp1d(my_rvals,nbar_all(my_rvals),bounds_error=False,fill_value=0)
 	
 	# Load the mask
 	mask = mangle.Mangle(mask_file)
