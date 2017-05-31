@@ -122,7 +122,7 @@ def dosamples(bn):
 #	ctx = mean( r4n2 * mysurvey.xi(rij_mag,rij_mu) / p )
 
 	Ra  = mean( rij_jack * r4n2 / p )
-	ct2 = mean( rij_jack * r4n2 * wi*wj * (1+mysurvey.xi(rij_mag,rij_mu)) / p )
+	ct2 = 2*mean( rij_jack * r4n2 * wi*wj * (1+mysurvey.xi(rij_mag,rij_mu)) / p )
 	ctx = mean( rij_jack * r4n2 * mysurvey.xi(rij_mag,rij_mu) / p )
 
 	for rpt in range(repeats):
@@ -165,26 +165,26 @@ def dosamples(bn):
 			for muj in range(len(mumins)):
 				j = muj + 10*rj
 
-				#4-point term
+				#4-point term -- YIKES HARDCODED BINS?
 				f = where( (rkl_mag>rmins[rj]) & (rkl_mag<rmins[rj]+4) & 
 						   (abs(rkl_mu)>mumins[muj]) & (abs(rkl_mu)<mumins[muj]+0.1) )
 
 				#ct4[j] += sum( ((r4n2 * rjk_mag**2 * xijk * nwk * ril_mag**2 * xiil * nwl)/(p*p_jk*p_il))[f] )/NSamp
-				ct4[j] += sum( ((rij_jack * rkl_jack * r4n2 * rjk_mag**2 * xijk * nwk * ril_mag**2 * xiil * nwl)/(p*p_jk*p_il))[f] )/NSamp
+				ct4[j] += 2*sum( ((rij_jack * rkl_jack * r4n2 * rjk_mag**2 * xijk * nwk * ril_mag**2 * xiil * nwl)/(p*p_jk*p_il))[f] )/NSamp
 
 				#First 3-point term
 				f = where( (rik_mag>rmins[rj]) & (rik_mag<rmins[rj]+4) & 
 						   (abs(rik_mu)>mumins[muj]) & (abs(rik_mu)<mumins[muj]+0.1) )
 
 				#ct3[j] += sum( ((r4n2 * rjk_mag**2 * xijk * nwk * wi)/(p*p_jk))[f] )/NSamp
-				ct3[j] += sum( ((rij_jack * rik_jack * r4n2 * rjk_mag**2 * xijk * nwk * wi)/(p*p_jk))[f] )/NSamp
+				ct3[j] += 2*sum( ((rij_jack * rik_jack * r4n2 * rjk_mag**2 * xijk * nwk * wi)/(p*p_jk))[f] )/NSamp
 
 				#Second 3-point term
 				f = where( (rjl_mag>rmins[rj]) & (rjl_mag<rmins[rj]+4) & 
 						   (abs(rjl_mu)>mumins[muj]) & (abs(rjl_mu)<mumins[muj]+0.1) )
 
 				#ct3[j] += sum( ((r4n2 * ril_mag**2 * xiil * nwl * wj)/(p*p_il))[f] )/NSamp
-				ct3[j] += sum( ((rij_jack * rjl_jack * r4n2 * ril_mag**2 * xiil * nwl * wj)/(p*p_il))[f] )/NSamp
+				ct3[j] += 2*sum( ((rij_jack * rjl_jack * r4n2 * ril_mag**2 * xiil * nwl * wj)/(p*p_il))[f] )/NSamp
 				
 	ct4 /= repeats
 	ct3 /= repeats

@@ -94,7 +94,7 @@ def dosamples(bn):
 	rij_mag,rij_mu = cleanup_l(ri_vec-rj_vec,0.5*(ri_vec+rj_vec))
 
 	Ra  = mean( r4n2 / p )
-	ct2 = mean( r4n2 * wi*wj * (1+mysurvey.xi(rij_mag,rij_mu)) / p )
+	ct2 = 2*mean( r4n2 * wi*wj * (1+mysurvey.xi(rij_mag,rij_mu)) / p )
 	ctx = mean( r4n2 * mysurvey.xi(rij_mag,rij_mu) / p )
 
 	for rpt in range(repeats):
@@ -135,19 +135,19 @@ def dosamples(bn):
 				f = where( (rkl_mag>rmins[rj]) & (rkl_mag<rmins[rj]+4) & 
 						   (abs(rkl_mu)>mumins[muj]) & (abs(rkl_mu)<mumins[muj]+0.1) )
 
-				ct4[j] += sum( ((r4n2 * rjk_mag**2 * xijk * nwk * ril_mag**2 * xiil * nwl)/(p*p_jk*p_il))[f] )/NSamp
+				ct4[j] += 2*sum( ((r4n2 * rjk_mag**2 * xijk * nwk * ril_mag**2 * xiil * nwl)/(p*p_jk*p_il))[f] )/NSamp
 
 				#First 3-point term
 				f = where( (rik_mag>rmins[rj]) & (rik_mag<rmins[rj]+4) & 
 						   (abs(rik_mu)>mumins[muj]) & (abs(rik_mu)<mumins[muj]+0.1) )
 
-				ct3[j] += sum( ((r4n2 * rjk_mag**2 * xijk * nwk * wi)/(p*p_jk))[f] )/NSamp
+				ct3[j] += 2*sum( ((r4n2 * rjk_mag**2 * xijk * nwk * wi)/(p*p_jk))[f] )/NSamp
 
 				#Second 3-point term
 				f = where( (rjl_mag>rmins[rj]) & (rjl_mag<rmins[rj]+4) & 
 						   (abs(rjl_mu)>mumins[muj]) & (abs(rjl_mu)<mumins[muj]+0.1) )
 
-				ct3[j] += sum( ((r4n2 * ril_mag**2 * xiil * nwl * wj)/(p*p_il))[f] )/NSamp
+				ct3[j] += 2*sum( ((r4n2 * ril_mag**2 * xiil * nwl * wj)/(p*p_il))[f] )/NSamp
 				
 	ct4 /= repeats
 	ct3 /= repeats

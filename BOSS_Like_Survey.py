@@ -70,11 +70,11 @@ def init(opts):
 	my_rvals[0] = d(zmin)
 	my_rvals[-1] = d(zmax)
 	my_rvals[1:-1] = d(zcen[f])
-	nbar_r = interp1d(my_rvals,nbar_all(my_rvals),bounds_error=False,fill_value=0)
+	old_nbar_r = interp1d(my_rvals,nbar_all(my_rvals),bounds_error=False,fill_value=0)
 	
 	if (P_fkp != 0):
 		def weight_r(r):
-			return 1/(1+P_fkp * nbar_r(r))
+			return 1/(1+P_fkp * old_nbar_r(r))
 	else:
 		wbar_all = interp1d(d(zcen),wfkp,bounds_error=False,fill_value=0)
 		weight_r = interp1d(my_rvals,wbar_all(my_rvals),bounds_error=False,fill_value=0)
